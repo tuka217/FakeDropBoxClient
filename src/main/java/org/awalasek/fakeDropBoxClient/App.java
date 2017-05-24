@@ -1,11 +1,22 @@
 package org.awalasek.fakeDropBoxClient;
 
-/**
- * Hello world!
- *
- */
+import java.io.IOException;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 public class App {
-    public static void main(String[] args) {
-        System.out.println("Hello World!");
+
+    public static void main(String[] args) throws IOException {
+        try {
+            Path dir = Paths.get(args[0]);
+
+            Thread thread = new Thread(new DirectoryWatchService(dir));
+            thread.start();
+        } catch (InvalidPathException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
     }
 }
