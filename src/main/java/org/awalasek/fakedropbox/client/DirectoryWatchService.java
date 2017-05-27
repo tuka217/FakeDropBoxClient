@@ -19,10 +19,8 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.awalasek.FakeDropBox.common.CreateFileChange;
-import org.awalasek.FakeDropBox.common.DeleteFileChange;
-import org.awalasek.FakeDropBox.common.FileChange;
-import org.awalasek.FakeDropBox.common.ModifyFileChange;
+import org.awalasek.fakedropbox.common.FileChange;
+import org.awalasek.fakedropbox.common.FileChangeFactory;
 
 public class DirectoryWatchService implements Runnable {
 
@@ -30,6 +28,7 @@ public class DirectoryWatchService implements Runnable {
     private final WatchService watcher;
     private final Map<WatchKey, Path> keys;
     private ChangeSubmitter changeSubmitter;
+    private FileChangeFactory fileChangeFactory;
 
     @SuppressWarnings("unchecked")
     static <T> WatchEvent<T> cast(WatchEvent<?> event) {
@@ -39,7 +38,8 @@ public class DirectoryWatchService implements Runnable {
     DirectoryWatchService(String username, Path dir) throws IOException {
         this.watcher = FileSystems.getDefault().newWatchService();
         this.keys = new HashMap<WatchKey, Path>();
-        this.changeSubmitter = new ChangeSubmitterImpl(username);
+        this.changeSubmitter = new ChangeSubmitterImpl();
+        this.fileChangeFactory = new FileChangeFactory(username);
 
         registerAll(dir);
     }
@@ -108,19 +108,7 @@ public class DirectoryWatchService implements Runnable {
     }
 
     private void signalEvent(WatchEvent<?> event, Path child) {
-        FileChange fileChange = null;
-        switch (event.kind().name()) {
-        case "ENTRY_CREATE":
-            fileChange = new CreateFileChange(child.toString());
-            break;
-        case "ENTRY_MODIFY":
-            fileChange = new ModifyFileChange(child.toString());
-            break;
-        case "ENTRY_DELETE":
-            fileChange = new DeleteFileChange(child.toString());
-            break;
-        }
-
+        FileChange fileChange = fileChangeFactory.getFileChange(event.kind(), child);
         changeSubmitter.submitFileChange(fileChange);
         System.out.format("%s: %s\n", event.kind().name(), child);
     }

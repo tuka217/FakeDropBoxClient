@@ -12,14 +12,14 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
-import org.awalasek.FakeDropBox.common.FileChange;
+import org.awalasek.fakedropbox.common.FileChange;
 
 public class ChangeSubmitterImpl implements ChangeSubmitter {
 
-    private String username;
+    private static final String SERVICE_ADDRESS = "http://172.17.0.2:8080/FakeDropBox/fileChange";
     
-    public ChangeSubmitterImpl(String username) {
-        this.username = username;
+    public ChangeSubmitterImpl() {
+        // do nothing
     }
     
     @Override
@@ -34,12 +34,12 @@ public class ChangeSubmitterImpl implements ChangeSubmitter {
     private void sendPost(FileChange fileChange) throws Exception {
 
         HttpClient httpclient = HttpClients.createDefault();
-        HttpPost httppost = new HttpPost("http://172.17.0.2:8080/FakeDropBox/fileChange");
+        HttpPost httppost = new HttpPost(SERVICE_ADDRESS);
 
         List<NameValuePair> params = new ArrayList<NameValuePair>(3);
-        params.add(new BasicNameValuePair("username", username));
-        params.add(new BasicNameValuePair("filename", fileChange.getFilePath()));
-        params.add(new BasicNameValuePair("fileEvent", fileChange.getChangeType().toString()));
+        params.add(new BasicNameValuePair("username", fileChange.getUsername()));
+        params.add(new BasicNameValuePair("filename", fileChange.getFilename()));
+        params.add(new BasicNameValuePair("changeType", fileChange.getChangeType().toString()));
         httppost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
 
         HttpResponse response = httpclient.execute(httppost);
