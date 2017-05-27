@@ -1,4 +1,4 @@
-package org.awalasek.fakeDropBoxClient;
+package org.awalasek.fakedropbox.client;
 
 import java.io.IOException;
 import java.nio.file.InvalidPathException;
@@ -9,9 +9,10 @@ public class App {
 
     public static void main(String[] args) throws IOException {
         try {
-            Path dir = Paths.get(args[0]);
+            String username = args[0];
+            Path dir = Paths.get(args[1]);
 
-            Thread thread = new Thread(new DirectoryWatchService(dir));
+            Thread thread = new Thread(new DirectoryWatchService(username, dir));
             thread.start();
         } catch (InvalidPathException e) {
             e.printStackTrace();

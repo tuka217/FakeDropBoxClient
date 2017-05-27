@@ -1,4 +1,4 @@
-package org.awalasek.fakeDropBoxClient;
+package org.awalasek.fakedropbox.client;
 
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
@@ -19,20 +19,27 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.awalasek.FakeDropBox.common.CreateFileChange;
+import org.awalasek.FakeDropBox.common.DeleteFileChange;
+import org.awalasek.FakeDropBox.common.FileChange;
+import org.awalasek.FakeDropBox.common.ModifyFileChange;
+
 public class DirectoryWatchService implements Runnable {
 
     private static final int WATCHED_DIRS_ARE_INACCESSIBLE = 1;
     private final WatchService watcher;
     private final Map<WatchKey, Path> keys;
+    private ChangeSubmitter changeSubmitter;
 
     @SuppressWarnings("unchecked")
     static <T> WatchEvent<T> cast(WatchEvent<?> event) {
         return (WatchEvent<T>) event;
     }
 
-    DirectoryWatchService(Path dir) throws IOException {
+    DirectoryWatchService(String username, Path dir) throws IOException {
         this.watcher = FileSystems.getDefault().newWatchService();
         this.keys = new HashMap<WatchKey, Path>();
+        this.changeSubmitter = new ChangeSubmitterImpl(username);
 
         registerAll(dir);
     }
@@ -101,6 +108,20 @@ public class DirectoryWatchService implements Runnable {
     }
 
     private void signalEvent(WatchEvent<?> event, Path child) {
+        FileChange fileChange = null;
+        switch (event.kind().name()) {
+        case "ENTRY_CREATE":
+            fileChange = new CreateFileChange(child.toString());
+            break;
+        case "ENTRY_MODIFY":
+            fileChange = new ModifyFileChange(child.toString());
+            break;
+        case "ENTRY_DELETE":
+            fileChange = new DeleteFileChange(child.toString());
+            break;
+        }
+
+        changeSubmitter.submitFileChange(fileChange);
         System.out.format("%s: %s\n", event.kind().name(), child);
     }
 

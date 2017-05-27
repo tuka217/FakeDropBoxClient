@@ -2,12 +2,12 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.awalasek</groupId>
-    <artifactId>fakeDropBoxClient</artifactId>
+    <groupId>org.awalasek.fake-dropbox</groupId>
+    <artifactId>client</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>FakeDropBoxClient</name>
+    <name>FakeDropBox.client</name>
     <url>http://maven.apache.org</url>
 
     <properties>
@@ -27,6 +27,24 @@
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpcore</artifactId>
             <version>4.4.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.awalasek.fake-dropbox</groupId>
+            <artifactId>common</artifactId>
+            <version>0.0.1</version>
         </dependency>
 
     </dependencies>
