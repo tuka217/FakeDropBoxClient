@@ -57,7 +57,7 @@ public class DirectoryWatchService implements Runnable {
     }
 
     private void register(Path dir) throws IOException {
-        WatchKey key = dir.register(watcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
+        WatchKey key = dir.register(watcher, ENTRY_CREATE, ENTRY_DELETE/*, ENTRY_MODIFY*/);
         Path prev = keys.get(key);
         if (prev == null) {
             System.out.format("register: %s\n", dir);

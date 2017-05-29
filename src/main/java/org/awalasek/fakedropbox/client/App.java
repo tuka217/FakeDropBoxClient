@@ -11,12 +11,19 @@ public class App {
         try {
             String username = args[0];
             Path dir = Paths.get(args[1]);
+            
+            ServerWatchService serverWatchService = new ServerWatchService(username, dir);
 
-            Thread thread = new Thread(new DirectoryWatchService(username, dir));
-            thread.start();
+            Thread localWatch = new Thread(new DirectoryWatchService(username, dir));
+            localWatch.start();
+            
+            Thread remoteWatch = new Thread(serverWatchService);
+            remoteWatch.start();
         } catch (InvalidPathException e) {
             e.printStackTrace();
         } catch (NullPointerException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

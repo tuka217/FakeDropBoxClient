@@ -47,6 +47,12 @@
             <version>0.0.1</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20170516</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -72,7 +78,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>org.awalasek.fakeDropBoxClient.App</mainClass>
+                            <mainClass>org.awalasek.fakedropbox.client.App</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
