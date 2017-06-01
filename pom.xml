@@ -78,7 +78,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>org.awalasek.fakedropbox.client.App</mainClass>
+                            <mainClass>org.awalasek.fakedropbox.client.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

@@ -1,11 +1,8 @@
 package org.awalasek.fakedropbox.client;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -18,10 +15,6 @@ public class ChangeSubmitterImpl implements ChangeSubmitter {
 
     private static final String SERVICE_ADDRESS = "http://172.17.0.2:8080/FakeDropBox/fileChange";
     
-    public ChangeSubmitterImpl() {
-        // do nothing
-    }
-    
     @Override
     public void submitFileChange(FileChange fileChange) {
         try {
@@ -32,7 +25,6 @@ public class ChangeSubmitterImpl implements ChangeSubmitter {
     }
 
     private void sendPost(FileChange fileChange) throws Exception {
-
         HttpClient httpclient = HttpClients.createDefault();
         HttpPost httppost = new HttpPost(SERVICE_ADDRESS);
 
@@ -42,17 +34,6 @@ public class ChangeSubmitterImpl implements ChangeSubmitter {
         params.add(new BasicNameValuePair("changeType", fileChange.getChangeType().toString()));
         httppost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
 
-        HttpResponse response = httpclient.execute(httppost);
-        HttpEntity entity = response.getEntity();
-
-        if (entity != null) {
-            InputStream instream = entity.getContent();
-            try {
-                // do something useful
-            } finally {
-                instream.close();
-            }
-        }
-
+        httpclient.execute(httppost);
     }
 }

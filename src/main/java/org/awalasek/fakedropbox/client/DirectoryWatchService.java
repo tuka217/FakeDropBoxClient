@@ -3,7 +3,6 @@ package org.awalasek.fakedropbox.client;
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_DELETE;
-import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
 
 import java.io.IOException;
@@ -90,7 +89,7 @@ public class DirectoryWatchService implements Runnable {
 
         for (WatchEvent<?> event : key.pollEvents()) {
             if (event.kind() == OVERFLOW) {
-                // do not handle
+                // do not handle, there is no need for it
                 continue;
             }
             handleEvent(event, dir);
